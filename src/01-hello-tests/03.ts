@@ -21,7 +21,7 @@ export type NewCompanyType = {
 }
 
 export type WithCompaniesType = {
-    companies: Array<{id: number, title: string}>
+    companies: Array<NewCompanyType>
 }
 
 export const addNewNewBooksToUser = (user: UserWithLaptopType & UserWithBooksType, bks: Array<string>) => {
@@ -49,10 +49,31 @@ export const removeBook = (user: UserWithLaptopType & UserWithBooksType, oldBook
     }
 }
 
-export const inNewCompany = (user: UserWithLaptopType & WithCompaniesType, newCom: WithCompaniesType) => {
-    let copy = {...user}
-    return {
-        copy,
+export const inNewCompany = (user: UserWithLaptopType & WithCompaniesType, newCom: NewCompanyType) => {
+    let copy = {
+        ...user,
         companies: [...user.companies, newCom]
     }
+    return copy
+}
+
+export const updateCompanyTitle = (user: WithCompaniesType, idCompany: number, titleCompany: string) => {
+    return {
+        ...user,
+        companies: user.companies.map(company => company.id === idCompany ? {...company, title: titleCompany} : company )
+    }
+}
+
+export const updateCompany = (companies: {[key: string]: Array<NewCompanyType>},
+                              userName: string,
+                              companyId: number,
+                              newTitle: string) => {
+
+    let companyCopy = {...companies}
+
+    companyCopy[userName] = companyCopy[userName].map(
+        c => c.id === companyId ? {...c, title: newTitle} : c
+    )
+
+    return companyCopy
 }
